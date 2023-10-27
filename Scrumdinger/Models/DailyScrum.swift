@@ -12,6 +12,8 @@ struct DailyScrum: Identifiable {
   var title = ""
   var attendees: [Attendee] = []
   var theme: Theme = .sky
+  var history: [History] = []
+
   var lengthInMinutes = 5
   var lengthInMinutesAsDouble: Double {
     get {

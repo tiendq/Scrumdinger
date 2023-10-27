@@ -28,7 +28,11 @@ enum Theme: String, CaseIterable, Identifiable {
   var id: String {
     name
   }
-  
+
+  var name: String {
+    rawValue.capitalized // self. is implicit
+  }
+
   var mainColor: Color {
     Color(self.rawValue)
   }
@@ -40,9 +44,5 @@ enum Theme: String, CaseIterable, Identifiable {
       case .indigo, .magenta, .navy, .oxblood, .purple:
         return .white
     }
-  }
-
-  var name: String {
-    rawValue.capitalized // self. is implicit
   }
 }

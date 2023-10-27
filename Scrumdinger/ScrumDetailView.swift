@@ -9,14 +9,12 @@ import SwiftUI
 
 struct ScrumDetailView: View {
   @State private var isEditing = false
-  @State private var editingScrum = DailyScrum.emptyScrum
-
   @Binding var scrum: DailyScrum
 
   var body: some View {
     List {
       Section(header: Text("Meeting Info")) {
-        NavigationLink(destination: MeetingView()) {
+        NavigationLink(destination: MeetingView(scrum: $scrum)) {
           Label("Start Meeting", systemImage: "timer")
             .font(.headline)
             .foregroundColor(.accentColor)
@@ -43,32 +41,26 @@ struct ScrumDetailView: View {
           Label(attendee.name, systemImage: "person")
         }
       }
+      Section(header: Text("History")) {
+        if scrum.history.isEmpty {
+          Label("No meetings yet", systemImage: "calendar.badge.exclamationmark")
+        }
+        ForEach(scrum.history) { history in
+          HStack {
+            Image(systemName: "calendar")
+            Text(history.date, style: .date)
+          }
+        }
+      }
     }
     .navigationTitle(scrum.title)
     .toolbar {
       Button("Edit") {
         isEditing = true
-        editingScrum = scrum
       }
     }
     .sheet(isPresented: $isEditing) {
-      NavigationStack {
-        ScrumEditView(scrum: $editingScrum)
-          .navigationTitle(scrum.title)
-          .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-              Button("Cancel") {
-                isEditing = false
-              }
-            }
-            ToolbarItem(placement: .confirmationAction) {
-              Button("Done") {
-                isEditing = false
-                scrum = editingScrum
-              }
-            }
-          }
-      }
+      EditScrumSheet(scrum: $scrum, isEditing: $isEditing)
     }
   }
 }
